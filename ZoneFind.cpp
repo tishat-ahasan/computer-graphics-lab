@@ -61,6 +61,78 @@ void drawline0(int x0,int y0,int x1,int y1){
        glVertex2i(x, y); 
     }
 }
+
+void drawline1(int x0,int y0,int x1,int y1){
+    int dx = x1-x0;
+    int dy = y1-y0;
+    int x=x0;
+    int y=y0;
+    int d = dx-2*dy;
+    int dNE = 2*(dy-dx);
+    int dN = -2*dx;
+    glVertex2i(x, y);
+    while(y<y1){
+        if(d<0){
+            x++;
+            y++;
+            d+=dNE;
+        }
+        else{
+            y++;
+            d+=dN;
+        }
+       glVertex2i(x, y); 
+    }
+}
+
+void drawline2(int x0,int y0,int x1,int y1){
+    int dx = x1-x0;
+    int dy = y1-y0;
+    int x=x0;
+    int y=y0;
+    int d = -dy-2*dx;
+    int dNW = -2*(dy+dx);
+    int dN = -2*dx;
+    glVertex2i(x, y);
+    while(y<y1){
+        if(d>0){
+            x--;
+            y++;
+            d+=dNW;
+        }
+        else{
+            y++;
+            d+=dN;
+        }
+       glVertex2i(x, y); 
+    }
+}
+
+
+void drawline3(int x0,int y0,int x1,int y1){
+    int dx = x1-x0;
+    int dy = y1-y0;
+    int x=x0;
+    int y=y0;
+    int d = -2*dy-dx;
+    int dNW = -2*(dy+dx);
+    int dW = -2*dy;
+    glVertex2i(x, y);
+    while(x>x1){
+        if(d<0){
+            x--;
+            y++;
+            d+=dNW;
+        }
+        else{
+            x--;
+            d+=dW;
+        }
+       glVertex2i(x, y); 
+    }
+}
+
+
 void draw8way(int x0,int y0,int x1,int y1,int zone)
 {
     if (zone==0) {
@@ -81,13 +153,19 @@ void findzone(int x0,int y0,int x1,int y1){
     int dy = y1-y0;
     if (dx >= 0 && dy >= 0){        //zone 0 or zone 1
         if (dx>=dy) {                //zone 0
-            draw8way(x0,y0,x1,y1,0);
+            drawline0( x0, y0, x1, y1);
         }
-        else glVertex2i(10, 20);        //zone 1
+        else drawline1( x0, y0, x1, y1);        //zone 1
     }
     else if (dx<0 && dy>=0){        //zone 2 or zone 3
-        if(abs(dx)>=dy) glVertex2i(-20, 10);        //zone 3
-        else glVertex2i(-10, 20);       //zone 2
+        if(abs(dx)>=dy) {			//zone 3
+        	drawline3( x0, y0, x1, y1);     
+        	glVertex2i(-20, 10);
+        	}   
+        else {       //zone 2
+        	drawline2( x0, y0, x1, y1);
+        	glVertex2i(-10, 20);       
+        }
     }
     else if (dx<0 && dy<0){         //zone 4 or zone 5
         if(abs(dx)>=abs(dy)) glVertex2i(-20, -10);        //zone 4
@@ -119,7 +197,7 @@ static void display(void){
 
     drawzone();
     
-    findzone(0,0,50,20);
+    findzone(0,0,-50,10);
     
     glEnd();
     glutSwapBuffers();
