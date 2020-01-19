@@ -138,15 +138,15 @@ void drawline4(int x0,int y0,int x1,int y1){
     int x=x0;
     int y=y0;
     int d = -2*dy+dx;
-    int dSW = -2*(dy+dx);
+    int dSW = -2*(dy-dx);
     int dW = -2*dy;
     glVertex2i(x, y);
     while(x>x1){
-        if(d<0){
+        if(d<0){  //dW
             x--;
             d+=dW;
         }
-        else{
+        else{		//dSW
             x--;
             y--;
             d+=dSW;
@@ -283,6 +283,8 @@ static void display(void){
     drawzone();
     
     findzone(0,0,50,-10);
+    glColor3d(1,0,0);
+    findzone(0,0,-50,-1);
     
     glEnd();
     glutSwapBuffers();
