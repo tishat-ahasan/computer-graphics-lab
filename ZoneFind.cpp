@@ -19,10 +19,12 @@
 #endif
 
 #include <stdlib.h>
-
+#include<stdio.h>
 static int slices = 16;
 static int stacks = 16;
 
+int flag = 0;
+int x00=0,x11=0,y00=0,y11=0;
 /* GLUT callback Handlers */
 
 static void resize(int width, int height){
@@ -39,7 +41,14 @@ static void resize(int width, int height){
 /************************************************************************************************************************/
 //self code here...
 
+
+
+
+
+
+
 void drawline0(int x0,int y0,int x1,int y1){
+	glColor3d(1,0,0);
     int dx = x1-x0;
     int dy = y1-y0;
     int x=x0;
@@ -63,6 +72,7 @@ void drawline0(int x0,int y0,int x1,int y1){
 }
 
 void drawline1(int x0,int y0,int x1,int y1){
+	glColor3d(0,1,0);
     int dx = x1-x0;
     int dy = y1-y0;
     int x=x0;
@@ -86,6 +96,7 @@ void drawline1(int x0,int y0,int x1,int y1){
 }
 
 void drawline2(int x0,int y0,int x1,int y1){
+	glColor3d(0,0,1);
     int dx = x1-x0;
     int dy = y1-y0;
     int x=x0;
@@ -110,6 +121,7 @@ void drawline2(int x0,int y0,int x1,int y1){
 
 
 void drawline3(int x0,int y0,int x1,int y1){
+	glColor3d(1,1,0);
     int dx = x1-x0;
     int dy = y1-y0;
     int x=x0;
@@ -133,6 +145,7 @@ void drawline3(int x0,int y0,int x1,int y1){
 }
 
 void drawline4(int x0,int y0,int x1,int y1){
+	glColor3d(1,0,1);
     int dx = x1-x0;
     int dy = y1-y0;
     int x=x0;
@@ -157,6 +170,7 @@ void drawline4(int x0,int y0,int x1,int y1){
 
 
 void drawline5(int x0,int y0,int x1,int y1){
+	glColor3d(1,1,1);
     int dx = x1-x0;
     int dy = y1-y0;
     int x=x0;
@@ -181,6 +195,7 @@ void drawline5(int x0,int y0,int x1,int y1){
 
 
 void drawline6(int x0,int y0,int x1,int y1){
+	glColor3d(0,1,1);
     int dx = x1-x0;
     int dy = y1-y0;
     int x=x0;
@@ -205,6 +220,7 @@ void drawline6(int x0,int y0,int x1,int y1){
 
 
 void drawline7(int x0,int y0,int x1,int y1){
+	glColor3d(1,1,.25);
     int dx = x1-x0;
     int dy = y1-y0;
     int x=x0;
@@ -266,6 +282,47 @@ void findzone(int x0,int y0,int x1,int y1){
 }
 
 
+// void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+// {
+//     if(button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) 
+//     {
+//        double xpos, ypos;
+//        //getting cursor position
+//        glfwGetCursorPos(window, &xpos, &ypos);
+//        cout << "Cursor Position at (" << xpos << " : " << ypos << endl;
+//     }
+// }
+
+
+void mouse(int button, int state, int mousex, int mousey)
+{
+    if(button==GLUT_LEFT_BUTTON && state==GLUT_DOWN)
+    {
+        int mx = mousex;
+        int my = mousey;
+        //printf(" c1 %d %d\n",mx-320,my-240);
+        glutPostRedisplay();
+        flag++;
+        if (flag == 1) {
+        	x00 = mx-320;
+        	y00 = -my+240;
+        }
+        else if (flag == 2)
+        {
+        	x11 = mx-320;
+        	y11 = -my+240;
+        }
+    }
+    // if (flag == 2)
+    // {
+    	
+    // 	findzone(0,0,50,-10);
+    // }
+}
+
+
+
+int a0=0,a1=0,b0=0,b1=0;
 /************************************************************************************************************************/
 static void display(void){
     int x = 10, y = 20;
@@ -282,10 +339,18 @@ static void display(void){
 
     drawzone();
     
-    findzone(0,0,50,-10);
+    //findzone(0,0,50,-10);
     glColor3d(1,0,0);
-    findzone(0,0,-50,-1);
-    
+    if (flag == 2){
+    	flag = 0;
+    	a0=x00;
+    	a1=x11;
+    	b0=y00;
+    	b1=y11;
+    	
+    }
+    //printf("%d %d %d %d \n", a0,b0,a1,b1);
+    findzone(a0,b0,a1,b1);
     glEnd();
     glutSwapBuffers();
 }
@@ -332,10 +397,13 @@ int main(int argc, char *argv[]){
 
     glutCreateWindow("Experiment 01");
 
+    printf("zone 0 - RED\nzone 1 - GREEN\nzone 2 - BLUE\nzone 3 - YELLOW\nzone 4 - PURPLE\nzone 5 - WHITE\nzone 6 - SKYBLUE\nzone 7 - LIGHT YELLOW\n");
     glutReshapeFunc(resize);
     glutDisplayFunc(display);
     glutKeyboardFunc(key);
     glutIdleFunc(idle);
+    glutMouseFunc(mouse);
+    //if (flag == 2) printf("here\n");
 
     glutMainLoop();
 
