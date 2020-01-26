@@ -20,6 +20,7 @@
 
 #include <stdlib.h>
 #include<stdio.h>
+#include <unistd.h>
 static int slices = 16;
 static int stacks = 16;
 
@@ -67,6 +68,7 @@ void drawline0(int x0,int y0,int x1,int y1){
             y++;
             d+=dNE;
         }
+        
        glVertex2i(x, y); 
     }
 }

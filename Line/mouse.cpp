@@ -77,14 +77,5 @@ int main(int argc,char** argv)
 
 
 
-zone 0 - RED
-zone 1 - GREEN
-zone 2 - BLUE
-zone 3 - YELLOW
-zone 4 - PURPLE
-zone 5 - WHITE
-zone 6 - SKYBLUE
-zone 7 - LIGHT YELLOW
-
 
 
