@@ -26,10 +26,10 @@ using namespace std;
 
 static int slices = 16;
 static int stacks = 16;
-#define MXX 250
-#define MNX -250
-#define MXY 150
-#define MNY -150
+#define MXX 150
+#define MNX -150
+#define MXY 100
+#define MNY -100
 
 
 #define TOP 8
@@ -41,6 +41,8 @@ static int stacks = 16;
 int flag = 0;
 int x00=0,x11=0,y00=0,y11=0;
 int xx00=0,xx11=0,yy00=0,yy11=0;
+int Lx0=0,Lx1=0,Ly0=0,Ly1=0;
+int Rx0=0,Rx1=0,Ry0=0,Ry1=0;
 /* GLUT callback Handlers */
 
 static void resize(int width, int height){
@@ -72,15 +74,26 @@ void cohenSutherLand(int &x0,int &y0,int &x1, int &y1){
     int x,y;
     code0 = makeCode(x0,y0);
     code1 = makeCode(x1,y1);
-
+    int flag = 0;
     while(1){
-        if (!(code0 | code1)) break;
+        flag++;
+        if (!(code0 | code1)) {
+            if (flag == 1)
+            { printf("Fully Accepted\n");}
+            break;
+        }
         else if (code0 & code1) {
             x0=x1;
             y0=y1;
+            if (flag == 1)
+            { printf("Fully Rejected\n");}
             break;
         }
         else{
+
+            if (flag == 1)
+            { printf("Partially Accepted\n");}
+
             if (code0) {
                 code = code0;
                 x = x0;
@@ -100,7 +113,7 @@ void cohenSutherLand(int &x0,int &y0,int &x1, int &y1){
                 B = y0-y1;
                 U = y-y0;
                 A = x0;
-                printf("L %d B %d U %d A%d\n",L,B,U,A );
+                //printf("L %d B %d U %d A%d\n",L,B,U,A );
                 double tmp = (U*L)/B + A;
                 tmp = round(tmp);
                 x = (int) tmp;
@@ -113,7 +126,7 @@ void cohenSutherLand(int &x0,int &y0,int &x1, int &y1){
                 B = y0-y1;
                 U = y-y0;
                 A = x0;
-                printf("L %d B %d U %d A%d\n",L,B,U,A );
+                //printf("L %d B %d U %d A%d\n",L,B,U,A );
                 double tmp = (U*L)/B + A;
                 tmp = round(tmp);
                 x = (int) tmp;
@@ -125,7 +138,7 @@ void cohenSutherLand(int &x0,int &y0,int &x1, int &y1){
                 B = x0-x1;
                 U = x-x0;
                 A = y0;
-                printf("L %d B %d U %d A%d\n",L,B,U,A );
+                //printf("L %d B %d U %d A%d\n",L,B,U,A );
                 double tmp = (U*L)/B + A;
                 tmp = round(tmp);
                 y = (int) tmp;
@@ -138,7 +151,7 @@ void cohenSutherLand(int &x0,int &y0,int &x1, int &y1){
                 B = x0-x1;
                 U = x-x0;
                 A = y0;
-                printf("L %d B %d U %d A%d\n",L,B,U,A );
+                //printf("L %d B %d U %d A%d\n",L,B,U,A );
                 double tmp = (U*L)/B + A;
                 tmp = round(tmp);
                 y = (int) tmp;
@@ -153,7 +166,7 @@ void cohenSutherLand(int &x0,int &y0,int &x1, int &y1){
                 y1 = y;
                 code1 = makeCode(x1,y1);
             }
-            printf("checcccccccccccccccccccckkkkkkkkkkkkkkkk %d %d\n",x1,y1 );
+            //printf("checcccccccccccccccccccckkkkkkkkkkkkkkkk %d %d\n",x1,y1 );
             
         }
     }
@@ -402,10 +415,10 @@ void drawzone(){
     return;
 }
 void drawBox(){
-    for (int i=MNX;i<MXX;i++) glVertex2i(i,MXY);
-    for (int i=MNX;i<MXX;i++) glVertex2i(i,MNY);
-    for (int i=MNY;i<MXY;i++) glVertex2i(MXX, i);
-    for (int i=MNY;i<MXY;i++) glVertex2i(MNX, i);
+    for (int i=MNX-150;i<MXX+150;i++) glVertex2i(i,MXY);
+    for (int i=MNX-150;i<MXX+150;i++) glVertex2i(i,MNY);
+    for (int i=MNY-150;i<MXY+150;i++) glVertex2i(MXX, i);
+    for (int i=MNY-150;i<MXY+150;i++) glVertex2i(MNX, i);
 
     return;
 }
@@ -461,7 +474,7 @@ static void display(void){
     // glVertex2i(0, -240);
     // glVertex2i(0, 239);
     glEnd();
-    glPointSize(1);
+    glPointSize(2);
     glBegin(GL_POINTS);
 
     drawBox();
@@ -481,22 +494,45 @@ static void display(void){
         xx11 = x11;
         yy11 = y11;
         cohenSutherLand(xx00,yy00,xx11,yy11);
-        printf("%d %d %d %d \n", a0,b0,a1,b1);
-        printf("%d %d %d %d\n",xx00,yy00,xx11,yy11);
+
+        //printf("%d %d %d %d \n", a0,b0,a1,b1);
+        //printf("%d %d %d %d\n",xx00,yy00,xx11,yy11);
+
+        Lx0 = x00;
+        Ly0 = y00;
+        Lx1 = xx00;
+        Ly1 = yy00;
+
+        
+        Rx0 = xx11;
+        Ry0 = yy11;
+        Rx1 = x11;
+        Ry1 = y11;        
     	
     }
     //printf("%d %d %d %d \n", a0,b0,a1,b1);
-    glColor3d(1,1,1);
+    glColor3d(1,0,1);
+    findzone(Lx0,Ly0,Lx1,Ly1);
     
-    findzone(a0,b0,a1,b1);
-    glEnd();
-    glPointSize(4);
-    glBegin(GL_POINTS);
-
     glColor3d(1,0,0);
-    //printf("%d %d %d %d\n",xx00,yy00,xx11,yy11);
+    findzone(Rx0,Ry0,Rx1,Ry1);
+    
+    glColor3d(1,1,1);
     findzone(xx00,yy00,xx11,yy11);
 
+    glColor3d(0,1,0);
+    glEnd();
+    glPointSize(5);
+    glBegin(GL_POINTS);
+
+    glColor3d(0,1,0);
+    //printf("%d %d %d %d\n",xx00,yy00,xx11,yy11);
+    glVertex2i(Lx0,Ly0);
+    glVertex2i(Lx1,Ly1);
+    glVertex2i(Rx0,Ry0);
+    glVertex2i(Rx1,Ry1);
+    //glVertex2i(0,0);
+    
     glEnd();
     glutSwapBuffers();
 }
@@ -543,7 +579,7 @@ int main(int argc, char *argv[]){
 
     glutCreateWindow("Experiment 01");
 
-    printf("zone 0 - RED\nzone 1 - GREEN\nzone 2 - BLUE\nzone 3 - YELLOW\nzone 4 - PURPLE\nzone 5 - WHITE\nzone 6 - SKYBLUE\nzone 7 - LIGHT YELLOW\n");
+    //printf("zone 0 - RED\nzone 1 - GREEN\nzone 2 - BLUE\nzone 3 - YELLOW\nzone 4 - PURPLE\nzone 5 - WHITE\nzone 6 - SKYBLUE\nzone 7 - LIGHT YELLOW\n");
     glutReshapeFunc(resize);
     glutDisplayFunc(display);
     glutKeyboardFunc(key);
