@@ -71,25 +71,46 @@ void draw8way(int x,int y,int x0,int y0){
 }
 
 void drawCircle(int r,int x0,int y0){
-    int x = 0;
-    int y = r;
+    int x = 20;
+    int y = 0;
+
+    // int d = 5 - 4*r;
+    // draw8way(x,y,x0,y0);
+    // while(y>x)
+    // {
+    //     if (d<=0){          //dE
+    //         x++;
+    //         d += 8*x+12;
+    //     }   
+
+    //     else{               //dSE
+    //         x++;
+    //         y--;
+    //         d += 8*x - 8*y + 20;
+    //     }
+    //     draw8way(x,y,x0,y0);    
+    // }
 
     int d = 5 - 4*r;
     draw8way(x,y,x0,y0);
-    while(y>x)
-    {
-        if (d<=0){          //dE
-            x++;
-            d += 8*x+12;
-        }   
+    while(x>y){
+    	if (d>0){  //dNW
+    		x--;
+    		y++;
+    		d += -8*x + 8*y + 20;
+    	}
 
-        else{               //dSE
-            x++;
-            y--;
-            d += 8*x - 8*y + 20;
-        }
-        draw8way(x,y,x0,y0);    
+    	else{		//dN
+    		y++;
+    		d += 8*y+12;
+    	}
+    	printf(" d = %d\n",d);
+    	printf("x = %d,y = %d\n",x,y);
+    	draw8way(x,y,x0,y0);
     }
+
+
+
 }
 
 
@@ -139,7 +160,7 @@ static void display(void){
         //flag = 0;
         drawCircle(20,x11,y11); 
     }
-    k = (k+1)%100;
+    // k = (k+1)%100;
     
     glVertex2i(x, y+1);
     glVertex2i(x, y);

@@ -345,6 +345,9 @@ void reshape(int width, int height)
     glLoadIdentity();
     glOrtho(-WIDTH/2,WIDTH/2-1,-HEIGHT/2,HEIGHT/2-1,-1,1);
     glMatrixMode(GL_MODELVIEW);
+
+
+
     glLoadIdentity();
 }
 
@@ -359,7 +362,7 @@ void Timer(int ex)
 
 
     glutPostRedisplay();
-    glutTimerFunc(30,Timer,0);
+    glutTimerFunc(100,Timer,0);
 }
 
 
